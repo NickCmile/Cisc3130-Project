@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 class Task<E> {
@@ -15,23 +16,31 @@ class Task<E> {
         return title + " - " + description;
     }
 }
+
 public class ToDoListApp {
-    private static ArrayList<Task<String>> tasks = new ArrayList<>();
-    
-    public static void addTask(String title, String description) {
-        tasks.add(new Task<>(title, description));
-        System.out.println("Task added successfully.");
+    private static HashMap<String, ArrayList<Task>> taskMap = new HashMap<>();
+
+    public static void addTask(String category, String title, String description) {
+        Task newTask = new Task(title, description);
+        taskMap.putIfAbsent(category, new ArrayList<>());
+        taskMap.get(category).add(newTask);
+        System.out.println("Task added under category: " + category);
     }
+
     public static void displayTasks() {
-        if (tasks.isEmpty()) {
+        if (taskMap.isEmpty()) {
             System.out.println("No tasks available.");
             return;
         }
-        System.out.println("Your Tasks:");
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + ". " + tasks.get(i));
+        for (String category : taskMap.keySet()) {
+            System.out.println("\nCategory: " + category);
+            ArrayList<Task> tasks = taskMap.get(category);
+            for (int i = 0; i < tasks.size(); i++) {
+                System.out.println(" " + (i + 1) + ". " + tasks.get(i));
+            }
         }
     }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -43,17 +52,20 @@ public class ToDoListApp {
 
             switch (choice) {
                 case 1:
+                    System.out.print("Enter category: ");
+                    String category = scanner.nextLine();
                     System.out.print("Enter task title: ");
                     String title = scanner.nextLine();
                     System.out.print("Enter task description: ");
                     String description = scanner.nextLine();
-                    addTask(title, description);
+                    addTask(category, title, description);
                     break;
                 case 2:
                     displayTasks();
                     break;
                 case 3:
                     System.out.println("Exiting...");
+                    scanner.close();
                     return;
                 default:
                     System.out.println("Invalid option.");
