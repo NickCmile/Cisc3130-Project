@@ -2,11 +2,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-class Task {
-    private String title;
-    private String description;
+class Task<E> {
+    private E title;
+    private E description;
 
-    public Task(String title, String description) {
+    public Task(E title, E description) {
         this.title = title;
         this.description = description;
     }
